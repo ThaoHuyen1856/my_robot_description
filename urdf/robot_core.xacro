@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<!--
+  robot_core.xacro — Links & Joints của robot
+  =============================================
+  Mô tả hình dạng vật lý: chassis, 2 drive wheels, 1 caster wheel.
+  File này chỉ chứa URDF thuần — không có Gazebo-specific tags.
+  Gazebo tags sẽ được thêm ở Tuần 4 (gazebo_control.xacro).
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ══════════════════════════════════════════════════
+       BASE FOOTPRINT — gốc tọa độ ảo trên mặt sàn
+       ══════════════════════════════════════════════════ -->
+  <link name="base_footprint"/>
+
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child  link="base_link"/>
+    <!-- Nâng base_link lên đúng 1 wheel_radius so với sàn -->
+    <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ══════════════════════════════════════════════════
+       BASE_LINK / CHASSIS — thân chính robot
+       ══════════════════════════════════════════════════ -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_box
+      mass="${chassis_mass}"
+      x="${chassis_length}" y="${chassis_width}" z="${chassis_height}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_box>
+  </link>
+
+  <!-- ══════════════════════════════════════════════════
+       LEFT DRIVE WHEEL
+       ══════════════════════════════════════════════════ -->
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child  link="left_wheel_link"/>
+    <origin xyz="0 ${wheel_ygap} ${wheel_zoff}" rpy="-${PI/2} 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="left_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <!-- Sphere collision → giảm lateral friction (xem Tuần 4) -->
+        <sphere radius="${wheel_radius}"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_cylinder
+      mass="${wheel_mass}"
+      radius="${wheel_radius}"
+      length="${wheel_width}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_cylinder>
+  </link>
+
+  <!-- ══════════════════════════════════════════════════
+       RIGHT DRIVE WHEEL
+       ══════════════════════════════════════════════════ -->
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child  link="right_wheel_link"/>
+    <origin xyz="0 -${wheel_ygap} ${wheel_zoff}" rpy="${PI/2} 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="right_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="${wheel_radius}"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_cylinder
+      mass="${wheel_mass}"
+      radius="${wheel_radius}"
+      length="${wheel_width}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_cylinder>
+  </link>
+
+  <!-- ══════════════════════════════════════════════════
+       CASTER WHEEL — bánh cân bằng phía sau
+       Fixed joint → không quay độc lập
+       ══════════════════════════════════════════════════ -->
+  <joint name="caster_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="caster_wheel_link"/>
+    <!-- Đặt phía sau, thấp hơn để chạm sàn -->
+    <origin xyz="${caster_xoff} 0 ${wheel_zoff}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="caster_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_sphere
+      mass="${caster_mass}"
+      radius="${caster_radius}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_sphere>
+  </link>
+
+</robot>

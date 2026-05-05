@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+  properties.xacro — Kích thước & hằng số của robot
+  ===================================================
+  Thay đổi giá trị ở đây → toàn bộ robot tự điều chỉnh.
+  Đơn vị: mét (m) và kilogram (kg).
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ── CHASSIS (thân robot) ──────────────────────── -->
+  <xacro:property name="chassis_length" value="0.30"/>  <!-- dài 30 cm -->
+  <xacro:property name="chassis_width"  value="0.20"/>  <!-- rộng 20 cm -->
+  <xacro:property name="chassis_height" value="0.10"/>  <!-- cao 10 cm -->
+  <xacro:property name="chassis_mass"   value="1.0"/>   <!-- kg -->
+
+  <!-- ── DRIVE WHEELS (bánh dẫn động trái/phải) ───── -->
+  <xacro:property name="wheel_radius"   value="0.05"/>  <!-- bán kính 5 cm -->
+  <xacro:property name="wheel_width"    value="0.04"/>  <!-- bề rộng bánh 4 cm -->
+  <xacro:property name="wheel_mass"     value="0.1"/>   <!-- kg -->
+  <!-- Khoảng cách từ tâm chassis đến tâm bánh theo trục Y -->
+  <xacro:property name="wheel_ygap"     value="0.14"/>  <!-- 14 cm -->
+  <!-- Offset dọc: bánh chạm sàn khi chassis cách sàn đúng 1 wheel_radius -->
+  <xacro:property name="wheel_zoff"     value="-0.05"/> <!-- −5 cm -->
+
+  <!-- ── CASTER WHEEL (bánh cân bằng phía sau) ─────── -->
+  <xacro:property name="caster_radius"  value="0.025"/> <!-- bán kính 2.5 cm -->
+  <xacro:property name="caster_mass"    value="0.05"/>  <!-- kg -->
+  <!-- Vị trí: sau chassis -->
+  <xacro:property name="caster_xoff"    value="-0.10"/> <!-- −10 cm (phía sau) -->
+
+  <!-- ── HẰNG SỐ TOÁN HỌC ─────────────────────────── -->
+  <xacro:property name="PI" value="3.14159265358979"/>
+
+</robot>

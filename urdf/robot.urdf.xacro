@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+robot.urdf.xacro – File gốc: gộp tất cả xacro lại thành 1 URDF
+================================================================
+robot_state_publisher đọc file này qua launch file.
+Thêm include mới ở đây khi cần mở rộng robot.
+
+Tuần 3: properties + materials + macros + robot_core
+Tuần 4: thêm gazebo_control + sensors (xem hướng dẫn bên dưới)
+-->
+<robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Kích thước & hằng số -->
+  <xacro:include filename="$(find my_robot_description)/urdf/properties.xacro"/>
+
+  <!-- Màu sắc RViz -->
+  <xacro:include filename="$(find my_robot_description)/urdf/materials.xacro"/>
+
+  <!-- Macro tính inertia -->
+  <xacro:include filename="$(find my_robot_description)/urdf/macros.xacro"/>
+
+  <!-- Links + Joints của robot -->
+  <xacro:include filename="$(find my_robot_description)/urdf/robot_core.xacro"/>
+
+  <!-- Sensors: camera + lidar -->
+  <xacro:include filename="$(find my_robot_description)/urdf/sensors.xacro"/>
+
+  <!--
+    TUẦN 4 – Thêm dòng này khi học Gazebo Simulation:
+    <xacro:include filename="$(find my_robot_description)/urdf/gazebo_control.xacro"/>
+  -->
+
+</robot>
