@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!--
+  my_world.world — Môi trường Warehouse đơn giản
+  ================================================
+  Định dạng SDF (Simulation Description Format) — KHÔNG phải URDF.
+
+  Cấu trúc:
+    - ground_plane + sun: BẮT BUỘC
+    - 4 tường tạo phòng 8x8 m
+    - 2 hộp vật cản để test LiDAR /scan
+-->
+<sdf version="1.6">
+  <world name="my_world">
+
+    <physics name="default_physics" default="0" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- Mặt sàn — BẮT BUỘC, thiếu → robot rơi vô tận -->
+    <include><uri>model://ground_plane</uri></include>
+
+    <!-- Ánh sáng — BẮT BUỘC, thiếu → Gazebo tối đen -->
+    <include><uri>model://sun</uri></include>
+
+    <!-- Tường phía Bắc -->
+    <model name="wall_north">
+      <pose>4 0 0.5 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.2 8.4 1.0</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.2 8.4 1.0</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Tường phía Nam -->
+    <model name="wall_south">
+      <pose>-4 0 0.5 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.2 8.4 1.0</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.2 8.4 1.0</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Tường phía Đông -->
+    <model name="wall_east">
+      <pose>0 4 0.5 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="col"><geometry><box><size>8.0 0.2 1.0</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>8.0 0.2 1.0</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Tường phía Tây -->
+    <model name="wall_west">
+      <pose>0 -4 0.5 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="col"><geometry><box><size>8.0 0.2 1.0</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>8.0 0.2 1.0</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Vật cản 1 (đỏ) — phía trước robot ~2 m -->
+    <model name="box_obstacle_1">
+      <pose>2.0 0 0.25 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.5 0.5 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.5 0.5 0.5</size></box></geometry>
+          <material><ambient>0.8 0.2 0.2 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Vật cản 2 (xanh) — lệch trái ~1.5 m -->
+    <model name="box_obstacle_2">
+      <pose>1.5 1.5 0.25 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.4 0.4 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.4 0.4 0.5</size></box></geometry>
+          <material><ambient>0.2 0.2 0.8 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

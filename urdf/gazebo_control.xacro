@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+  gazebo_control.xacro — DiffDrive Plugin cho Gazebo
+  ====================================================
+  TUẦN 4 MỚI — plugin điều khiển robot trong Gazebo simulation.
+
+  Plugin này:
+    - Lắng nghe topic /cmd_vel (TwistStamped) → drive motors ảo
+    - Publish /odom (nav_msgs/Odometry) → vị trí ước tính robot
+    - Publish /joint_states → trạng thái bánh xe
+    - Broadcast TF: odom → base_link
+
+  QUAN TRỌNG: left_wheel_joint & right_wheel_joint phải khớp
+  chính xác với tên joint trong robot_core.xacro.
+  Kiểm tra bằng: cat urdf/robot_core.xacro | grep "joint name"
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <gazebo>
+    <plugin name="diff_drive_controller"
+            filename="libgazebo_ros_diff_drive.so">
+
+      <!-- ── Joints bánh xe ──────────────────────────────
+           PHẢI khớp tên với robot_core.xacro
+           left_wheel_joint và right_wheel_joint            -->
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+
+      <!-- ── Kích thước vật lý (đơn vị: mét) ─────────────
+           wheel_separation = 2 × wheel_ygap = 2 × 0.14 = 0.28 m
+           (khoảng cách giữa tâm 2 bánh)
+           wheel_diameter   = 2 × wheel_radius = 2 × 0.05 = 0.10 m -->
+      <wheel_separation>0.28</wheel_separation>
+      <wheel_diameter>0.10</wheel_diameter>
+
+      <!-- ── Giới hạn động học ────────────────────────── -->
+      <max_wheel_torque>20</max_wheel_torque>
+      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+
+      <!-- ── Topics ROS2 ──────────────────────────────────
+           Teleop gửi TwistStamped lên /cmd_vel
+           ros2 run teleop_twist_keyboard teleop_twist_keyboard
+             ros-args -p stamped:=true -p use_sim_time:=true   -->
+      <command_topic>cmd_vel</command_topic>
+
+      <!-- ── Odometry ────────────────────────────────────
+           publish_odom     = true → xuất /odom topic
+           publish_odom_tf  = true → broadcast odom→base_link TF
+           publish_wheel_tf = true → broadcast wheel transforms    -->
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>true</publish_wheel_tf>
+
+      <!-- ── Frame IDs ────────────────────────────────── -->
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+
+    </plugin>
+  </gazebo>
+
+</robot>
